@@ -6,7 +6,6 @@ from audio import *
 def calculate(user_input):
     user_input = user_input.replace(',', '.')
     user_input = fix_low_numbers(user_input)
-    print(user_input)
     text = user_input.split()
     operation = str()
     numbers = []
@@ -51,7 +50,6 @@ def divide(x, y):
         x, y, result = check_if_float(x, y, result)
         synonyms = ('podzielone przez', 'po podzieleniu przez', 'dzielone przez')
         text = str(x) + ' ' + random.choice(synonyms) + ' ' + str(y) + ' daje ' + str(result)
-        debug(text)
         say(text)
     except ZeroDivisionError:
         say('Nie można dzielić przez 0!')
@@ -76,6 +74,7 @@ operation_switcher = {
     'pomnożyć': multiply,
     'pomnóż': multiply,
     'pomnożone': multiply,
+    'x': multiply,
 
     # Division
     'podzielić': divide,
