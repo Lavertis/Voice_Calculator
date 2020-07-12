@@ -7,13 +7,22 @@ def calculate(user_input):
     user_input = user_input.replace(',', '.')
     user_input = fix_low_numbers(user_input)
     text = user_input.split()
-    operation = str()
+    operation = ''
+    prev = ''
+    prev_prev = prev
     numbers = []
+
     for word in text:
-        if re.search('^[+-]?[0-9]+$|^[+-]?[0-9]+[.]?[0-9]+$', word):
-            numbers.append(float(word))
-        elif word in operation_switcher:
+        if word in operation_switcher and is_digit(prev):
             operation = word
+        elif is_digit(word):
+            if prev == 'minus' and not is_digit(prev_prev):
+                numbers.append(-float(word))
+            else:
+                numbers.append(float(word))
+        prev_prev = prev
+        prev = word
+
     try:
         operation_switcher.get(operation)(numbers[0], numbers[1])
     except (IndexError, TypeError):
@@ -31,8 +40,7 @@ def add(x, y):
 def subtract(x, y):
     result = x - y
     x, y, result = check_if_float(x, y, result)
-    synonyms = ('odjąć', 'minus')
-    text = str(x) + ' ' + random.choice(synonyms) + ' ' + str(y) + ' to ' + str(result)
+    text = str(x) + ' ' + 'odjąć' + ' ' + str(y) + ' to ' + str(result)
     say(text)
 
 
@@ -74,6 +82,7 @@ operation_switcher = {
     'pomnożyć': multiply,
     'pomnóż': multiply,
     'pomnożone': multiply,
+    'razy': multiply,
     'x': multiply,
 
     # Division
@@ -94,6 +103,11 @@ def fix_low_numbers(user_input):
     for number in numbers:
         user_input = user_input.replace(number, numbers.get(number))
     return user_input
+
+
+def is_digit(word):
+    if re.search('^[+-]?[0-9]+$|^[+-]?[0-9]+[.]?[0-9]+$', word):
+        return True
 
 
 def check_if_float(x, y, result):
