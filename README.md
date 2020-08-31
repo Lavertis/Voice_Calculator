@@ -1,2 +1,2 @@
-# Voice_Calculator
+# Voice calculator
 Voice calculator with support for simple commands
